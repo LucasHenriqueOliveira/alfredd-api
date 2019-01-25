@@ -66,19 +66,13 @@ class UserController extends Controller
 
         $this->validateNew($request);
         
-        $company = Company::findByNumberDoc($request->post('company_doc'));
-        $company_id = $company->cd_emp;
-
         // create
         $user = (new User())->store([
             'name' => $request->post('name'),
             'username' => $request->post('username'),
             'password' => $request->post('password'),
             'email' => $request->post('email'),
-            'function' => $request->post('function'),
-            'sector' => $request->post('sector'),
             'is_active' => $request->post('is_active'),
-            'company_id' => $company_id
         ]);
         
         if (!$user) {
