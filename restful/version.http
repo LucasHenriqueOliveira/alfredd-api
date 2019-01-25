@@ -1,0 +1,8 @@
+GET http://api.alfredd.localhost/
+Accept: */*
+Cache-Control: no-cache
+
+<> 2018-12-06T055450.200.json
+
+###
+
