@@ -12,7 +12,7 @@ class ConvertData extends Seeder
      */
     public function run()
     {
-
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $alldata = DB::table('hotel')->get();
         if (!$alldata) throw new Exception('content not found');
 
@@ -79,7 +79,7 @@ class ConvertData extends Seeder
             ]);
             $user = DB::table('users')->find($user_id);
         }
-
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
     }
 }
