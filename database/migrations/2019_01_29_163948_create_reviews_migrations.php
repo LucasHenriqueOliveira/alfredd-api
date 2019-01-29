@@ -19,7 +19,7 @@ class CreateReviewsMigrations extends Migration
             $table->text('negative_description');
             $table->float('score');
             $table->string('evaluation',45);
-            $table->string('title',45);
+            $table->string('title',255);
             $table->string('language',10);
             $table->timestamps();
         });

@@ -7,14 +7,12 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
-use Traits\PropertiesTranslation;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-    use Authenticatable, Authorizable, PropertiesTranslation;
+    use Authenticatable, Authorizable;
 
     protected $errors = [];
 
@@ -33,11 +31,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             if (!empty($user->cd_usuario)) {
                 throw new \Exception('user exists');
             }
-            // TODO: voltar a usar o create(). Fui vencido pelo Oracle...
             $user_fields = [
-                'username'            => $data['email'],
-                'name'       => $data['name'],
-                'email'              => $data['email']
+                'username'  => $data['email'],
+                'name'      => $data['name'],
+                'email'     => $data['email']
             ];
             $user = (new User())->create($user_fields);
         } catch (\Exception $e) {
