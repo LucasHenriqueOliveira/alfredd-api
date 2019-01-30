@@ -26,6 +26,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'cpf'
     ];
 
+    public function profile() {
+        return $this->hasOne(Profile::class);
+    }
+
+    public function hotel() {
+        return $this->hasOne(Hotel::class,'id','hotel_id')->first();
+    }
+
     public function store($data)
     {
         try {

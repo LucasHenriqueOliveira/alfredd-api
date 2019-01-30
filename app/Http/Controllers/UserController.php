@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Transformers\UserTransform;
 use App\Transformers\UserTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -53,7 +54,7 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['error' => 'user not found'], 404);
         }
-        return $this->response->item($user, new UserTransformer());
+        return $this->response->item($user, new UserTransform());
     }
 
     public function store(Request $request, $rawData = false)
@@ -77,7 +78,7 @@ class UserController extends Controller
             return response()->json(['error' => 'an error occurred while trying to create a user', 'error_list' => $user->getErrors()], 404);
         }
         
-        return $rawData ? $user : $this->response->item($user, new UserTransformer());
+        return $rawData ? $user : $this->response->item($user, new UserTransform());
         
     }
 }
