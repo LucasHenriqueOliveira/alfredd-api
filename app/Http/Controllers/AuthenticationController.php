@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Crypt;
 use Tymon\JWTAuth\Claims\Collection;
 use Tymon\JWTAuth\JWTAuth;
 use Illuminate\Http\Request;
@@ -71,28 +72,23 @@ class AuthenticationController extends Controller
      */
     public function authenticate(Request $request)
     {
-        $token = false;
         // grab credentials from the request
         $credentials = $request->only('username', 'password');
         if ((empty($credentials['username'])) || (empty($credentials['password']))) return response()->json(['error' => 'username and password are requested'],401);
-        // encrpypt
-        $credentials['username'] = urldecode($credentials['username']);  // TODO: isso tá feio
-        $credentials['password'] = md5(urldecode($credentials['password']));  // TODO: bcrypt()
         try {
             // attempt to verify the credentials and create a token for the user
-            $user = User::where('ds_usuario', $credentials['username'])->first();
+            $user = User::attempt($credentials);
+
             if (!$user) {
-                return response()->json(['error' => 'user not found'], 500);
+                return response()->json(['error' => 'invalid credentials (user not found or incorrect password)'], 500);
             }
-            if ($user->password===$credentials['password']) {
-                $token = $this->auth->fromUser($user);
-            }
+            $token = $this->auth->fromUser($user);
             if (!$token) {
-                return response()->json(['error' => 'invalid credentials'], 401);
+                return response()->json(['error' => 'cannot create a token'], 500);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['error' => 'could not create token'], 500);
+            return response()->json(['error' => 'cannot create token'], 500);
         }
         // all good so return the token
         return response()->json(compact('token'));

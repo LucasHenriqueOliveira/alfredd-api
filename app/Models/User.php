@@ -7,6 +7,8 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -17,12 +19,20 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $errors = [];
 
     protected $fillable = [
-        'user_id',
+        'id',
         'name',
         'username',
-        'email',
-        'password'
+        'password',
+        'cpf'
     ];
+
+    public function profile() {
+        return $this->hasOne(Profile::class)->first();
+    }
+
+    public function hotel() {
+        return $this->hasOne(Hotel::class,'id','hotel_id')->first();
+    }
 
     public function store($data)
     {
@@ -32,11 +42,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
                 throw new \Exception('user exists');
             }
             $user_fields = [
-                'username'  => $data['email'],
                 'name'      => $data['name'],
-                'email'     => $data['email']
+                'username'  => $data['username'],
+                'password'  => Crypt::encrypt($data['password']),
             ];
-            $user = (new User())->create($user_fields);
+            $user = self::create($user_fields);
         } catch (\Exception $e) {
             $this->errors[] = $e->getMessage();
             return $e->getMessage();
@@ -68,17 +78,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return [];
     }
 
-    private function attempt($credentials)
+    public static function attempt($credentials)
     {
-        if (!isset($credentials['password']) || !isset($credentials['email'])) {
+        if (!isset($credentials['password']) || !isset($credentials['username'])) {
             return false;
         }
+        $user = self::where('username', $credentials['username'])->first();
 
-        $user = User::where('username', $credentials['email'])->where('password',encrypt($credentials['password']))
-            ->first();
-
+        // check password
         if ($user) {
-            Auth::login($user);
+            if ((Hash::check($credentials['password'],$user->password))==false) $user = false;
         }
 
         return $user;

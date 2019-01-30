@@ -43,8 +43,8 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::policy(User::class, UserPolicy::class);
 
-//        Gate::define('create', function($user) {
-//            return ($user->cd_usuario===60296);
-//        });
+        Gate::define('view', function($user) {
+            return ($user->profile_id===2);
+        });
     }
 }

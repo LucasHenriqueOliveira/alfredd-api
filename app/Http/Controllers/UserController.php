@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Transformers\UserTransformer;
+use App\Transformers\UserTransform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Validators\ValidatesUserRequests;
@@ -49,11 +49,14 @@ class UserController extends Controller
      */
     public function get($id)
     {
+        if (Gate::denies('view', $this->getUserLogged())) {
+            return response()->json(['error' => 'policy: cannot view user data'], 403);
+        }
         $user = User::find($id);
         if (!$user) {
             return response()->json(['error' => 'user not found'], 404);
         }
-        return $this->response->item($user, new UserTransformer());
+        return $this->response->item($user, new UserTransform());
     }
 
     public function store(Request $request, $rawData = false)
@@ -70,15 +73,14 @@ class UserController extends Controller
             'name' => $request->post('name'),
             'username' => $request->post('username'),
             'password' => $request->post('password'),
-            'email' => $request->post('email'),
-            'is_active' => $request->post('is_active'),
+            'cpf' => $request->post('cpf')
         ]);
         
         if (!$user) {
             return response()->json(['error' => 'an error occurred while trying to create a user', 'error_list' => $user->getErrors()], 404);
         }
         
-        return $rawData ? $user : $this->response->item($user, new UserTransformer());
+        return $rawData ? $user : $this->response->item($user, new UserTransform());
         
     }
 }

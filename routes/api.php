@@ -34,6 +34,7 @@ $api->group(['middleware' => 'api.auth',  'prefix' => 'user'], function () use (
 
 $api->get('/', function () use ($app) {
     return response()->json([
+        "Project Name" => env("APP_NAME"),
         "API version" => env("API_VERSION"),
         "Lumen" => $app->version(),
         "PHP" => phpversion()

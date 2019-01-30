@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class ConvertData extends Seeder
 {
@@ -70,7 +71,7 @@ class ConvertData extends Seeder
             $user_id = DB::table('users')->insertGetId([
                 'name' => 'Alfredd Admin',
                 'username' => 'alfredd',
-                'password' => \Illuminate\Support\Facades\Crypt::encrypt('teste'),
+                'password' => Hash::make('teste'),
                 'cpf' => '00011122233',
                 'profile_id' => $profile->id,
                 'hotel_id' => 1
