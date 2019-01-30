@@ -25,6 +25,7 @@ Copiar o arquivo `.env.example` como `.env` e configurar os dados de ambiente.
 Adicionar a chave de criptografia:
 
 `php artisan key:generate`
+`php artisan jwt:secret`
 
 Criar a estrutura de dados (tabelas) e carga inicia do banco:
 
