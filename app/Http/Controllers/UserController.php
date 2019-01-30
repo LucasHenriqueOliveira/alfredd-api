@@ -70,8 +70,7 @@ class UserController extends Controller
             'name' => $request->post('name'),
             'username' => $request->post('username'),
             'password' => $request->post('password'),
-            'email' => $request->post('email'),
-            'is_active' => $request->post('is_active'),
+            'cpf' => $request->post('cpf')
         ]);
         
         if (!$user) {
