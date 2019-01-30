@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Transformers\UserTransform;
-use App\Transformers\UserTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Validators\ValidatesUserRequests;
@@ -50,6 +49,9 @@ class UserController extends Controller
      */
     public function get($id)
     {
+        if (Gate::denies('view', $this->getUserLogged())) {
+            return response()->json(['error' => 'policy: cannot view user data'], 403);
+        }
         $user = User::find($id);
         if (!$user) {
             return response()->json(['error' => 'user not found'], 404);
