@@ -12,7 +12,7 @@ class ConvertData extends Seeder
      */
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         $alldata = DB::table('hotel')->get();
         if (!$alldata) throw new Exception('content not found');
 
@@ -59,10 +59,7 @@ class ConvertData extends Seeder
         $profile = DB::table('profiles')->where('name','administrator')->first();
         if (!$profile) {
             $profile_id = DB::table('profiles')->insertGetId([
-                'name' => 'Alfredd Admin',
-                'username' => 'alfredd',
-                'password' => \Illuminate\Support\Facades\Crypt::encrypt('teste'),
-                'cpf' => '00011122233'
+                'name' => 'administrator'
             ]);
             $profile = DB::table('profiles')->find($profile_id);
         }
@@ -75,11 +72,12 @@ class ConvertData extends Seeder
                 'username' => 'alfredd',
                 'password' => \Illuminate\Support\Facades\Crypt::encrypt('teste'),
                 'cpf' => '00011122233',
-                'profile_id' => $profile->id
+                'profile_id' => $profile->id,
+                'hotel_id' => 1
             ]);
             $user = DB::table('users')->find($user_id);
         }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
 
     }
 }
