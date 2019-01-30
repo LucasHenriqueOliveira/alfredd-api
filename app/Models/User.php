@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -69,17 +70,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return [];
     }
 
-    private function attempt($credentials)
+    public static function attempt($credentials)
     {
         if (!isset($credentials['password']) || !isset($credentials['username'])) {
             return false;
         }
+        $user = self::where('username', $credentials['username'])->first();
 
-        $user = User::where('username', $credentials['username'])->where('password',Crypt::encrypt($credentials['password']))
-            ->first();
-
+        // check password
         if ($user) {
-            Auth::login($user);
+            if ((Hash::check($credentials['password'],$user->password))==false) $user = false;
         }
 
         return $user;
