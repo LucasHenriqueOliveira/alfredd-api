@@ -7,7 +7,7 @@ use App\Models\User;
 
 class UserTransform extends TransformerAbstract
 {
-    protected $defaultIncludes = ['hotel'];
+    protected $defaultIncludes = ['hotel','profile'];
 
     public function transform(User $entity)
     {
@@ -22,6 +22,11 @@ class UserTransform extends TransformerAbstract
     public function includeHotel(User $user)
     {
         return $this->item($user->hotel(), new HotelTransform);
+    }
+
+    public function includeProfile(User $user)
+    {
+        return $this->item($user->profile(), new ProfileTransform);
     }
 
 }

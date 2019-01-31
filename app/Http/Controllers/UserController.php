@@ -59,20 +59,22 @@ class UserController extends Controller
         return $this->response->item($user, new UserTransform());
     }
 
-    public function store(Request $request, $rawData = false)
+    public function post(Request $request, $rawData = false)
     {
 
         if (Gate::denies('create', $this->getUserLogged())) {
             return response()->json(['error' => 'policy: cannot create a new user'], 403);
         }
         $this->validateNew($request);
-        
+
         // create
         $user = (new User())->store([
             'name' => $request->post('name'),
             'username' => $request->post('username'),
             'password' => $request->post('password'),
-            'cpf' => $request->post('cpf')
+            'cpf' => $request->post('cpf'),
+            'profile_id' => $request->post('profile_id'),
+            'hotel_id' => $request->post('hotel_id'),
         ]);
         
         if (!$user) {
@@ -81,5 +83,32 @@ class UserController extends Controller
         
         return $rawData ? $user : $this->response->item($user, new UserTransform());
         
+    }
+
+    public function put(Request $request, $id)
+    {
+
+        if (Gate::denies('update', $this->getUserLogged())) {
+            return response()->json(['error' => 'policy: cannot update an existent user'], 403);
+        }
+        $this->validateUpdate($request);
+
+        // create
+        $user = (new User())->put([
+            'id' => $id,
+            'name' => $request->post('name'),
+            'username' => $request->post('username'),
+            'password' => $request->post('password'),
+            'cpf' => $request->post('cpf'),
+            'profile_id' => $request->post('profile_id'),
+            'hotel_id' => $request->post('hotel_id'),
+        ]);
+
+        if (!$user) {
+            return response()->json(['error' => 'an error occurred while trying to create a user', 'error_list' => $user->getErrors()], 404);
+        }
+
+        return $this->response->item($user, new UserTransform());
+
     }
 }

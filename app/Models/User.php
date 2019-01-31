@@ -23,11 +23,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'name',
         'username',
         'password',
-        'cpf'
+        'cpf',
+        'profile_id',
+        'hotel_id'
     ];
 
     public function profile() {
-        return $this->hasOne(Profile::class)->first();
+        return $this->hasOne(Profile::class,'id','profile_id')->first();
     }
 
     public function hotel() {
@@ -38,15 +40,42 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         try {
             $user = self::firstOrNew(['username' => $data['username']]);
-            if (!empty($user->cd_usuario)) {
+            if (!empty($user->id)) {
                 throw new \Exception('user exists');
             }
             $user_fields = [
                 'name'      => $data['name'],
                 'username'  => $data['username'],
                 'password'  => Crypt::encrypt($data['password']),
+                'cpf'       => $data['cpf'],
+                'profile_id'=> $data['profile_id'],
+                'hotel_id'  => $data['hotel_id']
             ];
             $user = self::create($user_fields);
+        } catch (\Exception $e) {
+            $this->errors[] = $e->getMessage();
+            return $e->getMessage();
+        }
+        return $user;
+    }
+
+    public function put($data)
+    {
+        try {
+            $user = self::find(['id' => $data['id']]);
+            if (empty($user->id)) {
+                throw new \Exception('user not found');
+            }
+            $user_fields = [
+                'id'        => $data['id'],
+                'name'      => $data['name'],
+                'username'  => $data['username'],
+                'password'  => Crypt::encrypt($data['password']),
+                'cpf'       => $data['cpf'],
+                'profile_id'=> $data['profile_id'],
+                'hotel_id'  => $data['hotel_id']
+            ];
+            $user->save($user_fields);
         } catch (\Exception $e) {
             $this->errors[] = $e->getMessage();
             return $e->getMessage();

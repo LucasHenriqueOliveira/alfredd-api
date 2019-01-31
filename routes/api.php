@@ -27,7 +27,13 @@ $api->group(['middleware' => 'api.auth',  'prefix' => 'user'], function () use (
         'uses' => UserController::class . '@get'
     ]);
     $api->post('/', [
-        'uses' => UserController::class . '@store'
+        'uses' => UserController::class . '@post'
+    ]);
+    $api->put('/{id}', [
+        'uses' => UserController::class . '@put'
+    ]);
+    $api->delete('/', [
+        'uses' => UserController::class . '@delete'
     ]);
 
 });
