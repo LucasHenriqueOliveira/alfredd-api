@@ -7,6 +7,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
@@ -14,9 +15,10 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-    use Authenticatable, Authorizable;
+    use Authenticatable, Authorizable, SoftDeletes;
 
     protected $errors = [];
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'id',
@@ -62,7 +64,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function put($data)
     {
         try {
-            $user = self::find(['id' => $data['id']]);
+            $user = self::find($data['id']);
             if (empty($user->id)) {
                 throw new \Exception('user not found');
             }
@@ -75,7 +77,21 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
                 'profile_id'=> $data['profile_id'],
                 'hotel_id'  => $data['hotel_id']
             ];
-            $user->save($user_fields);
+            $user->update($user_fields);
+        } catch (\Exception $e) {
+            $this->errors[] = $e->getMessage();
+            return $e->getMessage();
+        }
+        return $user;
+    }
+
+    public function del($id) {
+        try {
+            $user = self::find($id);
+            if (empty($user->id)) {
+                throw new \Exception('user not found');
+            }
+            $user->delete();
         } catch (\Exception $e) {
             $this->errors[] = $e->getMessage();
             return $e->getMessage();

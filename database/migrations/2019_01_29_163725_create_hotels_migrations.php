@@ -19,6 +19,7 @@ class CreateHotelsMigrations extends Migration
             $table->string('name');
             $table->boolean('active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

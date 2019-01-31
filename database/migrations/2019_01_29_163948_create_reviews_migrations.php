@@ -23,6 +23,7 @@ class CreateReviewsMigrations extends Migration
             $table->string('title',255);
             $table->string('language',10);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

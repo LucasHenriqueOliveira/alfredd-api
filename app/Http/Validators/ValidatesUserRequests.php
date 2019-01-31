@@ -24,7 +24,6 @@ trait ValidatesUserRequests
         $this->validate($request, [
             'id'            => 'required|exists:users,id',
             'name'          => 'required|string|min:3',
-            'username'      => 'required|email|unique:users,username',
             'password'      => 'required|string|min:8',
             'cpf'           => 'required|digits:11',
             'profile_id'    => 'required|exists:profiles,id',

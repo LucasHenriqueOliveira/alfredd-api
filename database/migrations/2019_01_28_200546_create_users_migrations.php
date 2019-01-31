@@ -21,6 +21,7 @@ class CreateUsersMigrations extends Migration
             $table->string('password',255)->nullable();
             $table->string('cpf',11);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

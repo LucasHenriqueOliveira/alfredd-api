@@ -32,7 +32,7 @@ $api->group(['middleware' => 'api.auth',  'prefix' => 'user'], function () use (
     $api->put('/{id}', [
         'uses' => UserController::class . '@put'
     ]);
-    $api->delete('/', [
+    $api->delete('/{id}', [
         'uses' => UserController::class . '@delete'
     ]);
 

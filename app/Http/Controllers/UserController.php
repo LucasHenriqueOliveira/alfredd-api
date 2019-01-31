@@ -91,6 +91,7 @@ class UserController extends Controller
         if (Gate::denies('update', $this->getUserLogged())) {
             return response()->json(['error' => 'policy: cannot update an existent user'], 403);
         }
+        $request['id'] = $id;
         $this->validateUpdate($request);
 
         // create
@@ -103,6 +104,24 @@ class UserController extends Controller
             'profile_id' => $request->post('profile_id'),
             'hotel_id' => $request->post('hotel_id'),
         ]);
+
+        if (!$user) {
+            return response()->json(['error' => 'an error occurred while trying to create a user', 'error_list' => $user->getErrors()], 404);
+        }
+
+        return $this->response->item($user, new UserTransform());
+
+    }
+
+    public function delete($id)
+    {
+
+        if (Gate::denies('delete', $this->getUserLogged())) {
+            return response()->json(['error' => 'policy: cannot delete an existent user'], 403);
+        }
+
+        // create
+        $user = (new User())->del($id);
 
         if (!$user) {
             return response()->json(['error' => 'an error occurred while trying to create a user', 'error_list' => $user->getErrors()], 404);

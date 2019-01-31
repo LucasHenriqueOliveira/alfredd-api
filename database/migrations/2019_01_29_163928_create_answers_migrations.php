@@ -18,6 +18,7 @@ class CreateAnswersMigrations extends Migration
             $table->increments('id');
             $table->text('description');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
