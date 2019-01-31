@@ -65,7 +65,6 @@ class UserController extends Controller
         if (Gate::denies('create', $this->getUserLogged())) {
             return response()->json(['error' => 'policy: cannot create a new user'], 403);
         }
-
         $this->validateNew($request);
         
         // create
