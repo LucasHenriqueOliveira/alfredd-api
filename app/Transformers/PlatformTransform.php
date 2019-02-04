@@ -12,6 +12,7 @@ class PlatformTransform extends TransformerAbstract
         return [
             'id'        => $entity->id,
             'name'      => $entity->name,
+            'active'    => $entity->active,
         ];
     }
 

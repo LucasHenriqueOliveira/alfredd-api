@@ -17,7 +17,7 @@ trait ValidatesPlatformRequests
     protected function validateUpdate(Request $request)
     {
         $this->validate($request, [
-            'id'            => 'required|exists:profiles,id',
+            'id'            => 'required|exists:platforms,id',
             'name'          => 'required|string|min:3'
         ]);
     }
