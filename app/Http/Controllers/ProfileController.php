@@ -25,13 +25,13 @@ class ProfileController extends Controller
      *     path="/profile/{id}",
      *     tags={"Profile"},
      *     summary="get profile data",
-     *     description="Retorna os dados básicos de um usuário.",
+     *     description="Retorna os dados básicos de um perfil.",
      *     operationId="profile/{id}",
      *     security={{"bearerToken":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID do usuário",
+     *         description="ID do perfil",
      *         required=true,
      *         @OA\Schema(
      *             type="string"
@@ -115,7 +115,7 @@ class ProfileController extends Controller
         $profile = (new Profile())->del($id);
 
         if (!$profile) {
-            return response()->json(['error' => 'an error occurred while trying to create a profile', 'error_list' => $profile->getErrors()], 404);
+            return response()->json(['error' => 'an error occurred while trying to create a profile'], 404);
         }
 
         return $this->response->item($profile, new ProfileTransform());

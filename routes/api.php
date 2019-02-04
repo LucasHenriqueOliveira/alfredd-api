@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PlatformController;
 
 //general routes
 $api->post('auth/authorize', [
@@ -52,7 +53,24 @@ $api->group(['middleware' => 'api.auth',  'prefix' => 'profile'], function () us
     $api->delete('/{id}', [
         'uses' => ProfileController::class . '@delete'
     ]);
+});
 
+$api->group(['middleware' => 'api.auth',  'prefix' => 'platform'], function () use ($api) {
+    $api->get('/{id}', [
+        'uses' => PlatformController::class . '@get'
+    ]);
+    $api->get('/', [
+        'uses' => PlatformController::class . '@getAll'
+    ]);
+    $api->post('/', [
+        'uses' => PlatformController::class . '@post'
+    ]);
+    $api->put('/{id}', [
+        'uses' => PlatformController::class . '@put'
+    ]);
+    $api->delete('/{id}', [
+        'uses' => PlatformController::class . '@delete'
+    ]);
 });
 
 $api->get('/', function () use ($app) {
