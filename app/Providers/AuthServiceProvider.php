@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Profile;
 use App\Models\User;
+use App\Policies\ProfilePolicy;
 use App\Policies\UserPolicy;
 use Dingo\Api\Auth\Auth;
 use Dingo\Api\Auth\Provider\JWT;
@@ -42,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
 
 
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Profile::class, ProfilePolicy::class);
 
         Gate::define('view', function($user) {
             return ($user->profile_id===2);

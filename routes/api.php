@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 
 //general routes
 $api->post('auth/authorize', [
@@ -34,6 +35,22 @@ $api->group(['middleware' => 'api.auth',  'prefix' => 'user'], function () use (
     ]);
     $api->delete('/{id}', [
         'uses' => UserController::class . '@delete'
+    ]);
+
+});
+
+$api->group(['middleware' => 'api.auth',  'prefix' => 'profile'], function () use ($api) {
+    $api->get('/{id}', [
+        'uses' => ProfileController::class . '@get'
+    ]);
+    $api->post('/', [
+        'uses' => ProfileController::class . '@post'
+    ]);
+    $api->put('/{id}', [
+        'uses' => ProfileController::class . '@put'
+    ]);
+    $api->delete('/{id}', [
+        'uses' => ProfileController::class . '@delete'
     ]);
 
 });
