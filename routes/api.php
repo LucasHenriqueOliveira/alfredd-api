@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlatformController;
+use App\Http\Controllers\HotelController;
 
 //general routes
 $api->post('auth/authorize', [
@@ -70,6 +71,24 @@ $api->group(['middleware' => 'api.auth',  'prefix' => 'platform'], function () u
     ]);
     $api->delete('/{id}', [
         'uses' => PlatformController::class . '@delete'
+    ]);
+});
+
+$api->group(['middleware' => 'api.auth',  'prefix' => 'hotel'], function () use ($api) {
+    $api->get('/{id}', [
+        'uses' => HotelController::class . '@get'
+    ]);
+    $api->get('/', [
+        'uses' => HotelController::class . '@getAll'
+    ]);
+    $api->post('/', [
+        'uses' => HotelController::class . '@post'
+    ]);
+    $api->put('/{id}', [
+        'uses' => HotelController::class . '@put'
+    ]);
+    $api->delete('/{id}', [
+        'uses' => HotelController::class . '@delete'
     ]);
 });
 
