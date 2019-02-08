@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\AnswerController;
 
 //general routes
 $api->post('auth/authorize', [
@@ -89,6 +90,24 @@ $api->group(['middleware' => 'api.auth',  'prefix' => 'hotel'], function () use 
     ]);
     $api->delete('/{id}', [
         'uses' => HotelController::class . '@delete'
+    ]);
+});
+
+$api->group(['middleware' => 'api.auth',  'prefix' => 'answer'], function () use ($api) {
+    $api->get('/{id}', [
+        'uses' => AnswerController::class . '@get'
+    ]);
+    $api->get('/', [
+        'uses' => AnswerController::class . '@getAll'
+    ]);
+    $api->post('/', [
+        'uses' => AnswerController::class . '@post'
+    ]);
+    $api->put('/{id}', [
+        'uses' => AnswerController::class . '@put'
+    ]);
+    $api->delete('/{id}', [
+        'uses' => AnswerController::class . '@delete'
     ]);
 });
 
