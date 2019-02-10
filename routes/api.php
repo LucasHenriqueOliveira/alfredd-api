@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\ReviewController;
 
 //general routes
 $api->post('auth/authorize', [
@@ -108,6 +109,24 @@ $api->group(['middleware' => 'api.auth',  'prefix' => 'answer'], function () use
     ]);
     $api->delete('/{id}', [
         'uses' => AnswerController::class . '@delete'
+    ]);
+});
+
+$api->group(['middleware' => 'api.auth',  'prefix' => 'review'], function () use ($api) {
+    $api->get('/{id}', [
+        'uses' => ReviewController::class . '@get'
+    ]);
+    $api->get('/', [
+        'uses' => ReviewController::class . '@getAll'
+    ]);
+    $api->post('/', [
+        'uses' => ReviewController::class . '@post'
+    ]);
+    $api->put('/{id}', [
+        'uses' => ReviewController::class . '@put'
+    ]);
+    $api->delete('/{id}', [
+        'uses' => ReviewController::class . '@delete'
     ]);
 });
 
